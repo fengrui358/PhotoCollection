@@ -419,12 +419,7 @@ FileProgress.prototype.appear = function () {
 };
 
 
-
-
-
 $(function () {
-    var galleryId = $('#data-container').data('gallery-id');
-
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'pickfiles',
@@ -437,16 +432,17 @@ $(function () {
             max_file_size: '100mb', //最大文件体积限制
             prevent_duplicates: false //不允许选取重复文件
         },
-        flash_swf_url: '../plupload/js/Moxie.swf',
+        flash_swf_url: 'plupload/js/Moxie.swf',
         dragdrop: true,
         chunk_size: '4mb',
-        //uptoken: 'XM7-0pJ78EYgb519OriRoOGi26HNRT42TznsYNzM:3MEbBcS-Fial1DLmod1P7w_vGlg=:eyJzY29wZSI6ImZlbmdwZWlwZWkiLCJkZWFkbGluZSI6MTQ1OTA4OTg5OSwiaW5zZXJ0T25seSI6MCwiZGV0ZWN0TWltZSI6MCwiZnNpemVMaW1pdCI6MCwiZnNpemVNaW4iOjAsImNhbGxiYWNrRmV0Y2hLZXkiOjB9',
-        uptoken_url: 'gettoken',
+        
+        uptoken_url: '/home/gettoken',
+        //uptoken_url: location.hostname + '/home/gettoken',
 
         //uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
         //},
 
-        domain: 'o8pgb3dc3.bkt.clouddn.com',
+        domain: 'http://o8pgb3dc3.bkt.clouddn.com/',
         get_new_uptoken: false,
         // downtoken_url: '/downtoken',
         unique_names: true,
@@ -498,7 +494,7 @@ $(function () {
                     alert(EXIF.pretty(this));
                 });
 
-                $.post('AddContent',
+                $.post('/home/addcontent',
                     {
                         url: sourceLink,
                         type: file.type,
