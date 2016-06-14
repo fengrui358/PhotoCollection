@@ -21,6 +21,11 @@ namespace PhotoCollection.Models
         public virtual string Url { get; set; }
         public virtual string Type { get; set; }
         public virtual long Size { get; set; }
+
+        public virtual double GPSLatitude { get; set; }
+
+        public virtual double GPSLongitude { get; set; }
+
         public virtual string Exif { get; set; }
     }
 }

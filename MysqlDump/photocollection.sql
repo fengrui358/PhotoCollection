@@ -23,21 +23,17 @@ DROP TABLE IF EXISTS `photoinfos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `photoinfos` (
+  `Md5` varchar(64) NOT NULL,
+  `OrderNumber` bigint(20) NOT NULL AUTO_INCREMENT,
   `Url` varchar(500) DEFAULT NULL,
   `Type` varchar(50) DEFAULT NULL,
   `Size` bigint(20) DEFAULT NULL,
-  `Exif` varchar(20000) DEFAULT NULL
+  `GPSLatitude` double DEFAULT NULL,
+  `GPSLongitude` double DEFAULT NULL,
+  `Exif` varchar(20000) DEFAULT NULL,
+  PRIMARY KEY (`Md5`,`OrderNumber`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `photoinfos`
---
-
-LOCK TABLES `photoinfos` WRITE;
-/*!40000 ALTER TABLE `photoinfos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `photoinfos` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -48,4 +44,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-13 22:20:03
+-- Dump completed on 2016-06-14 22:19:14

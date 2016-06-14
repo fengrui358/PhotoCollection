@@ -435,7 +435,7 @@ $(function () {
         flash_swf_url: 'plupload/js/Moxie.swf',
         dragdrop: true,
         chunk_size: '4mb',
-        
+
         uptoken_url: '/home/gettoken',
         //uptoken_url: location.hostname + '/home/gettoken',
 
@@ -458,33 +458,34 @@ $(function () {
         auto_start: true,
         log_level: 5,
         init: {
-            'FilesAdded': function (up, files) {
+            'FilesAdded': function(up, files) {
                 $('table').show();
                 $('#success').hide();
-                plupload.each(files, function (file) {
-                    //todo:判断file是否重复
+                plupload.each(files,
+                    function(file) {
+                        //todo:判断file是否重复
 
-                    var progress = new FileProgress(file, 'fsUploadProgress');
-                    progress.setStatus("等待...");
-                    progress.bindUploadCancel(up);
-                });
+                        var progress = new FileProgress(file, 'fsUploadProgress');
+                        progress.setStatus("等待...");
+                        progress.bindUploadCancel(up);
+                    });
             },
-            'BeforeUpload': function (up, file) {
+            'BeforeUpload': function(up, file) {
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
                 if (up.runtime === 'html5' && chunk_size) {
                     progress.setChunkProgess(chunk_size);
                 }
             },
-            'UploadProgress': function (up, file) {
+            'UploadProgress': function(up, file) {
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
                 progress.setProgress(file.percent + "%", file.speed, chunk_size);
             },
-            'UploadComplete': function () {
+            'UploadComplete': function() {
                 $('#success').show();
             },
-            'FileUploaded': function (up, file, info) {
+            'FileUploaded': function(up, file, info) {
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 progress.setComplete(up, info);
 
@@ -492,24 +493,46 @@ $(function () {
                 var res = $.parseJSON(info);
                 var sourceLink = domain + res.key;
 
-                var exifInfo = null;
-                var nativeFile = file.getNative();
-                EXIF.getData(nativeFile, function () {
-                    exifInfo = JSON.stringify(this);
-                        
-                    $.post('/home/addcontent',
-                    {
-                        md5: 'adsfaf',
-                        url: sourceLink,
-                        type: file.type,
-                        size: file.size,
-                        exif: exifInfo
-                    },
-                    function (result) { },
-                    'json');
-                });                
+                $.get(sourceLink + '?exif',
+                        null,
+                        function(exifInfo) {
+                            //todo:获取GPS信息
+                            var gpsLatitude = exifInfo.GPSLatitude;
+                            var gpsLongitude = exifInfo.GPSLongitude;
+
+                            if (gpsLatitude != null) {
+                                
+                            }
+
+                            $.post('/home/addcontent',
+                                {
+                                    md5: res.hash,
+                                    url: sourceLink,
+                                    type: file.type,
+                                    size: file.size,
+                                    gpsLatitude: gpsLatitude,
+                                    gpsLongitude: gpsLongitude,
+
+                                    exif: exifInfo
+                                },
+                                function() {},
+                                'json');
+                        },
+                        'json')
+                    .error(function () {
+                        //获取信息失败，可能是截图
+                        $.post('/home/addcontent',
+                            {
+                                md5: res.hash,
+                                url: sourceLink,
+                                type: file.type,
+                                size: file.size
+                            },
+                            function() {},
+                            'json');
+                    });
             },
-            'Error': function (up, err, errTip) {
+            'Error': function(up, err, errTip) {
                 $('table').show();
                 var progress = new FileProgress(err.file, 'fsUploadProgress');
                 progress.setError();

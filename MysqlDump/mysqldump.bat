@@ -1,1 +1,1 @@
-mysqldump -u root -p photocollection > photocollection.sql
+mysqldump -u root -p -d photocollection > photocollection.sql
