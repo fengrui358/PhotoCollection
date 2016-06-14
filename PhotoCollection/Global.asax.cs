@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Dapper.FastCrud;
 
 namespace PhotoCollection
 {
@@ -11,6 +12,8 @@ namespace PhotoCollection
     {
         protected void Application_Start()
         {
+            OrmConfiguration.DefaultDialect = SqlDialect.MySql;
+
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }

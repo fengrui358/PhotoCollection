@@ -256,7 +256,7 @@ FileProgress.prototype.setComplete = function (up, info) {
 
         var img = new Image();
         if (!/imageView/.test(url)) {
-            url += imageView
+            url += imageView;
         }
         $(img).attr('src', url);
 
@@ -347,7 +347,7 @@ FileProgress.prototype.setComplete = function (up, info) {
                 infoWrapper.append(infoArea);
             }
 
-            Wrapper.append(infoWrapper);
+            //Wrapper.append(infoWrapper);
 
         }).on('error', function () {
             showImg.attr('src', 'default.png');
@@ -462,6 +462,8 @@ $(function () {
                 $('table').show();
                 $('#success').hide();
                 plupload.each(files, function (file) {
+                    //todo:判断file是否重复
+
                     var progress = new FileProgress(file, 'fsUploadProgress');
                     progress.setStatus("等待...");
                     progress.bindUploadCancel(up);
@@ -490,19 +492,22 @@ $(function () {
                 var res = $.parseJSON(info);
                 var sourceLink = domain + res.key;
 
-                EXIF.getData(file, function () {
-                    alert(EXIF.pretty(this));
-                });
-
-                $.post('/home/addcontent',
+                var exifInfo = null;
+                var nativeFile = file.getNative();
+                EXIF.getData(nativeFile, function () {
+                    exifInfo = JSON.stringify(this);
+                        
+                    $.post('/home/addcontent',
                     {
+                        md5: 'adsfaf',
                         url: sourceLink,
                         type: file.type,
                         size: file.size,
-                        exif: "sda"
+                        exif: exifInfo
                     },
                     function (result) { },
                     'json');
+                });                
             },
             'Error': function (up, err, errTip) {
                 $('table').show();
