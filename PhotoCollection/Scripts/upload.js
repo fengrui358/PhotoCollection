@@ -418,6 +418,7 @@ FileProgress.prototype.appear = function () {
 
 };
 
+var k = 'KDXNwr12XbywmYgVNmuNrBvNDkjE3wuy';
 
 $(function () {
     var uploader = Qiniu.uploader({
@@ -435,26 +436,10 @@ $(function () {
         flash_swf_url: 'plupload/js/Moxie.swf',
         dragdrop: true,
         chunk_size: '4mb',
-
         uptoken_url: '/home/gettoken',
-        //uptoken_url: location.hostname + '/home/gettoken',
-
-        //uptoken_func: function(file) { // 在需要获取 uptoken 时，该方法会被调用
-        //},
-
         domain: 'http://o8pgb3dc3.bkt.clouddn.com/',
-        get_new_uptoken: false,
-        // downtoken_url: '/downtoken',
+        get_new_uptoken: false,        
         unique_names: true,
-        // save_key: true,
-        // x_vars: {
-        //     'id': '1234',
-        //     'time': function(up, file) {
-        //         var time = (new Date()).getTime();
-        //         // do something with 'time'
-        //         return time;
-        //     },
-        // },
         auto_start: true,
         log_level: 5,
         init: {
@@ -463,8 +448,6 @@ $(function () {
                 $('#success').hide();
                 plupload.each(files,
                     function(file) {
-                        //todo:判断file是否重复
-
                         var progress = new FileProgress(file, 'fsUploadProgress');
                         progress.setStatus("等待...");
                         progress.bindUploadCancel(up);
@@ -496,12 +479,23 @@ $(function () {
                 $.get(sourceLink + '?exif',
                         null,
                         function(exifInfo) {
-                            //todo:获取GPS信息
-                            var gpsLatitude = exifInfo.GPSLatitude;
-                            var gpsLongitude = exifInfo.GPSLongitude;
+                            
+                            var gpsLatitude = null;
+                            var gpsLongitude = null;
 
-                            if (gpsLatitude != null) {
-                                
+                            if (exifInfo.GPSLatitude != null) {
+                                gpsLatitude = DMSToDDD(exifInfo.GPSLatitude);
+                            }
+
+                            if (exifInfo.GPSLongitude != null) {
+                                gpsLongitude = DMSToDDD(exifInfo.GPSLongitude);
+                            }
+
+                            var bdLatitude = null;
+                            var bdLongitude = null;
+
+                            if (typeof gpsLatitude == 'number' && typeof gpsLongitude == 'number' && gpsLatitude !== 0 && gpsLongitude !== 0) {
+
                             }
 
                             $.post('/home/addcontent',
@@ -565,3 +559,19 @@ $(function () {
         e.stopPropagation();
     });
 });
+
+function DMSToDDD(dms) {
+    if (dms != null && typeof dms.val == 'string') {
+        var dmsArray = dms.val.split(',');
+        if (dmsArray != null && dmsArray.length === 3) {
+            var ddd = parseFloat(dmsArray[0]) + parseFloat(dmsArray[1])/60 + parseFloat(dmsArray[2])/3600;
+            return ddd;
+        }
+    }
+
+    return 0;
+}
+
+function ConvertCoordinate(gpsLatitude, gpsLongitude) {
+    
+}
