@@ -476,10 +476,19 @@ $(function () {
                 var res = $.parseJSON(info);
                 var sourceLink = domain + res.key;
 
+                var postData = {
+                    md5: res.hash,
+                    url: sourceLink,
+                    type: file.type,
+                    size: file.size
+                };
+
                 $.get(sourceLink + '?exif',
                         null,
                         function(exifInfo) {
                             
+                            
+
                             var gpsLatitude = null;
                             var gpsLongitude = null;
 
@@ -491,39 +500,22 @@ $(function () {
                                 gpsLongitude = DMSToDDD(exifInfo.GPSLongitude);
                             }
 
-                            var bdLatitude = null;
-                            var bdLongitude = null;
+
+                            postData.gpsLatitude = gpsLatitude;
+                            postData.gpsLongitude = gpsLongitude;
+                            postData.exif = exifInfo;
 
                             if (typeof gpsLatitude == 'number' && typeof gpsLongitude == 'number' && gpsLatitude !== 0 && gpsLongitude !== 0) {
-
+                                AddContentWithBd(postData);
                             }
 
-                            $.post('/home/addcontent',
-                                {
-                                    md5: res.hash,
-                                    url: sourceLink,
-                                    type: file.type,
-                                    size: file.size,
-                                    gpsLatitude: gpsLatitude,
-                                    gpsLongitude: gpsLongitude,
-
-                                    exif: exifInfo
-                                },
-                                function() {},
-                                'json');
+                            //增加了exif信息
+                            AddContent(postData);
                         },
                         'json')
                     .error(function () {
                         //获取信息失败，可能是截图
-                        $.post('/home/addcontent',
-                            {
-                                md5: res.hash,
-                                url: sourceLink,
-                                type: file.type,
-                                size: file.size
-                            },
-                            function() {},
-                            'json');
+                        AddContent(postData);
                     });
             },
             'Error': function(up, err, errTip) {
@@ -572,6 +564,18 @@ function DMSToDDD(dms) {
     return 0;
 }
 
-function ConvertCoordinate(gpsLatitude, gpsLongitude) {
-    
+//增加数据并添加百度坐标系
+function AddContentWithBd(postData) {
+    $.get('http://api.map.baidu.com/geoconv/v1/?coords=' + postData.gpsLongitude + ',' + postData.gpsLatitude, null, function(bdCoord) {
+        var x = bdCoord.result.x;
+    }, 'json').error(function(parms) {
+        AddContent(postData);
+    });
+}
+
+function AddContent(postData) {
+    $.post('/home/addcontent',
+        postData,
+        function() {},
+        'json');
 }
