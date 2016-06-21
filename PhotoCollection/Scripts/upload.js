@@ -421,6 +421,12 @@ FileProgress.prototype.appear = function () {
 var k = 'KDXNwr12XbywmYgVNmuNrBvNDkjE3wuy';
 
 $(function () {
+    setInterval(function() {
+        $.get('/home/gettotalcount', null, function(data) {
+            $('.total-count').innerHTML(data);
+        });
+    }, 3000);
+
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'pickfiles',
@@ -486,11 +492,13 @@ $(function () {
                 $.get(sourceLink + '?exif',
                         null,
                         function(exifInfo) {
-                            
-                            
-
                             var gpsLatitude = null;
                             var gpsLongitude = null;
+                            var model = null;
+
+                            if (exifInfo.Model != null && exifInfo.Model.val != null) {
+                                model = exifInfo.Model.val;
+                            }
 
                             if (exifInfo.GPSLatitude != null) {
                                 gpsLatitude = DMSToDDD(exifInfo.GPSLatitude);
@@ -500,17 +508,19 @@ $(function () {
                                 gpsLongitude = DMSToDDD(exifInfo.GPSLongitude);
                             }
 
+                            postData.model = model;
 
+                            //增加坐标信息
                             postData.gpsLatitude = gpsLatitude;
                             postData.gpsLongitude = gpsLongitude;
-                            postData.exif = exifInfo;
+                            postData.exif = JSON.stringify(exifInfo);
 
                             if (typeof gpsLatitude == 'number' && typeof gpsLongitude == 'number' && gpsLatitude !== 0 && gpsLongitude !== 0) {
+                                //得到坐标信息，进行转换
                                 AddContentWithBd(postData);
+                            } else {
+                                AddContent(postData);
                             }
-
-                            //增加了exif信息
-                            AddContent(postData);
                         },
                         'json')
                     .error(function () {
@@ -566,9 +576,32 @@ function DMSToDDD(dms) {
 
 //增加数据并添加百度坐标系
 function AddContentWithBd(postData) {
-    $.get('http://api.map.baidu.com/geoconv/v1/?coords=' + postData.gpsLongitude + ',' + postData.gpsLatitude, null, function(bdCoord) {
-        var x = bdCoord.result.x;
-    }, 'json').error(function(parms) {
+    $.getJSON('http://api.map.baidu.com/geoconv/v1/?coords=' + postData.gpsLongitude + ',' + postData.gpsLatitude + '&ak=' + k + '&callback=?', function(bdCoord) {
+        if (bdCoord.status === 0 && bdCoord.result.length === 1) {
+            postData.BDLatitude = bdCoord.result[0].y;
+            postData.BDLongitude = bdCoord.result[0].x;
+
+            if (postData.BDLatitude !== 0 && postData.BDLongitude !== 0) {
+                AddContentWithBdAddress(postData);
+                return;
+            }
+        }
+
+        AddContent(postData);
+    });
+}
+
+//增加数据并添加百度坐标地址
+function AddContentWithBdAddress(postData) {
+    $.getJSON('http://api.map.baidu.com/geocoder/v2/?ak=' + k + '&callback=renderReverse&location=' + postData.BDLatitude + ',' + postData.BDLongitude + '&output=json' + '&callback=?', function (address) {
+        if (address.status === 0) {
+            postData.Address = address.result.formatted_address;
+            postData.Country = address.result.addressComponent.country;
+            postData.Province = address.result.addressComponent.province;
+            postData.City = address.result.addressComponent.city;
+            postData.District = address.result.addressComponent.district;
+        }
+
         AddContent(postData);
     });
 }

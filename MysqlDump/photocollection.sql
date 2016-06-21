@@ -27,10 +27,19 @@ CREATE TABLE `photoinfos` (
   `OrderNumber` bigint(20) NOT NULL AUTO_INCREMENT,
   `Url` varchar(500) DEFAULT NULL,
   `Type` varchar(50) DEFAULT NULL,
-  `Size` bigint(20) DEFAULT NULL,
-  `GPSLatitude` double DEFAULT NULL,
-  `GPSLongitude` double DEFAULT NULL,
-  `Exif` varchar(20000) DEFAULT NULL,
+  `Size` bigint(20) DEFAULT NULL COMMENT '图片的尺寸大小',
+  `Model` varchar(50) DEFAULT NULL COMMENT '设备型号',
+  `GPSLatitude` varchar(50) DEFAULT NULL COMMENT '原始维度',
+  `GPSLongitude` varchar(50) DEFAULT NULL COMMENT '原始经度',
+  `BDLatitude` varchar(50) DEFAULT NULL COMMENT '百度维度',
+  `BDLongitude` varchar(50) DEFAULT NULL COMMENT '百度经度',
+  `Address` varchar(256) DEFAULT NULL COMMENT '地址描述',
+  `Country` varchar(50) DEFAULT NULL COMMENT '国家',
+  `Province` varchar(50) DEFAULT NULL COMMENT '省份',
+  `City` varchar(50) DEFAULT NULL COMMENT '城市',
+  `District` varchar(50) DEFAULT NULL COMMENT '行政区',
+  `Exif` varchar(20000) DEFAULT NULL COMMENT '从七牛云获得的exif信息',
+  `CreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`Md5`,`OrderNumber`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -44,4 +53,4 @@ CREATE TABLE `photoinfos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-15 12:59:00
+-- Dump completed on 2016-06-21 15:37:07

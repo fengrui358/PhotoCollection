@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Dapper.FastCrud;
 using MySql.Data.MySqlClient;
 using NLog;
+using PhotoCollection.Helpers;
 using PhotoCollection.Models;
 using Qiniu.RS;
 
@@ -18,6 +19,7 @@ namespace PhotoCollection.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            ViewBag.TotalCount = DbHelper.TotalPhotoCount;
             return View();
         }
 
@@ -25,16 +27,7 @@ namespace PhotoCollection.Controllers
         {
             try
             {
-                var bucket = WebConfigurationManager.AppSettings["qiniu-bucket"];
-                Qiniu.Conf.Config.ACCESS_KEY = WebConfigurationManager.AppSettings["qiniu-ak"];
-                Qiniu.Conf.Config.SECRET_KEY = WebConfigurationManager.AppSettings["qiniu-sk"];
-
-                var put = new PutPolicy(bucket, 7200);
-
-                //调用Token()方法生成上传的Token
-                string upToken = put.Token();
-
-                return Json(new { uptoken = upToken }, JsonRequestBehavior.AllowGet);
+                return Json(new {uptoken = QiniuHelper.GetToken()}, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -46,13 +39,14 @@ namespace PhotoCollection.Controllers
         [HttpPost]
         public ActionResult AddContent(PhotoInfo photoInfo)
         {
-            //todo:延迟批量写入
-            using (var con = new MySqlConnection(WebConfigurationManager.ConnectionStrings["MySqlConnString"].ToString()))
-            {
-                con.Insert(photoInfo);
-            }
+            DbHelper.AddContent(photoInfo);
 
-            return Content(string.Empty);
+            return null;
+        }
+
+        public ActionResult GetTotalCount()
+        {
+            return Content(DbHelper.TotalPhotoCount.ToString());
         }
     }
 }

@@ -22,10 +22,24 @@ namespace PhotoCollection.Models
         public virtual string Type { get; set; }
         public virtual long Size { get; set; }
 
-        public virtual double GPSLatitude { get; set; }
+        public virtual string Model { get; set; }
 
-        public virtual double GPSLongitude { get; set; }
+        public virtual string GPSLatitude { get; set; }
+
+        public virtual string GPSLongitude { get; set; }
+
+        public virtual string BDLatitude { get; set; }
+
+        public virtual string BDLongitude { get; set; }
+        public virtual string Address { get; set; }
+        public virtual string Country { get; set; }
+        public virtual string Province { get; set; }
+        public virtual string City { get; set; }
+        public virtual string District { get; set; }
 
         public virtual string Exif { get; set; }
+
+        [DatabaseGeneratedDefaultValue]
+        public virtual DateTime CreateTime { get; set; }
     }
 }
