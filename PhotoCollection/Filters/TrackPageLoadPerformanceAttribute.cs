@@ -53,8 +53,7 @@ namespace PhotoCollection.Filters
                             $"Access the action more than 2 seconds. cost seconds {_url[currentThreadId]}.  URL: {costSeconds}");
                 }
                 else
-                {
-                    //todo:优化描述
+                {                    
                     LogManager.GetCurrentClassLogger()
                         .Trace(
                             $"Access the action. cost seconds {_url[currentThreadId]}.  URL: {costSeconds}");

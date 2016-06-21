@@ -30,7 +30,6 @@ namespace PhotoCollection.HttpModules
             //实际发生的异常
             Exception iex = ex.InnerException;
 
-            //todo：重定向错误            
             //response.Write("来自ErrorModule的错误处理<br />");
             //response.Write(iex.Message);
 

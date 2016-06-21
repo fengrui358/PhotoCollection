@@ -118,10 +118,10 @@ namespace PhotoCollection.Helpers
                         {
                             con.Close();
                         }
-                    }
-
-                    SetCount();
+                    }                    
                 }
+
+                SetCount();
             }
             catch (Exception ex)
             {
