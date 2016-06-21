@@ -1,13 +1,18 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <title>相片收集</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="该页面用于收集市面上不同型号手机的一些相片参数，请大家随手用自己的手机拍一到两张照片上传（请使用照片，不要用截图，目前iphone的照片数量已经足够了，最好是各种不同的安卓手机），拍摄的相片仅提取一些照片基本信息，如：光圈、快门、白平衡、ISO、焦距、相机品牌、型号、色彩编码等，不涉及任何隐私信息，也请不要上传人物照等隐私照片，感谢各位。">
     <link rel="stylesheet" type="text/css" href="../../Content/bootstrap.min.css"/>
-    <title>相片收集</title>
+    <link rel="shortcut icon" href="../../favicon.ico"/>
 </head>
 <body>
+<div style='display:none;'>
+    <img src="../../wxlogo.png" />
+</div>
 <div class="container">
     <h2 class="text-center">说明</h2>
     <p>该页面用于收集市面上不同型号手机的一些相片参数，请大家随手用自己的手机拍一到两张照片上传（请使用照片，不要用截图，目前iphone的照片数量已经足够了，最好是各种不同的安卓手机），拍摄的相片仅提取一些照片基本信息，如：光圈、快门、白平衡、ISO、焦距、相机品牌、型号、色彩编码等，<span class="bg-danger">不涉及任何隐私信息，也请不要上传人物照等隐私照片</span>，感谢各位。
@@ -40,8 +45,10 @@
             </table>
         </div>
     </div>
-    <p class="small text-center text-muted">当前系统共<span class="total-count">@ViewBag.TotalCount</span>张图片</p>
-    <p class="small text-center text-warning">上传失败？请将手机型号和问题描述发送到<a href="mailto:#">qjdev@qq.com</a></p>
+    <p class="small text-center text-muted">当前系统共<span class="total-count">@ViewBag.TotalCount</span>张图片
+    </p>
+    <p class="small text-center text-warning">上传失败？请将手机型号和问题描述发送到<a href="mailto:#">qjdev@qq.com</a>
+    </p>
 </div>
 <script src="../../Scripts/jquery-2.2.3.min.js"></script>
 <script src="../../Scripts/bootstrap.min.js"></script>
