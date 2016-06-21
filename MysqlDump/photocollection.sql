@@ -38,10 +38,12 @@ CREATE TABLE `photoinfos` (
   `Province` varchar(50) DEFAULT NULL COMMENT '省份',
   `City` varchar(50) DEFAULT NULL COMMENT '城市',
   `District` varchar(50) DEFAULT NULL COMMENT '行政区',
+  `Street` varchar(50) DEFAULT NULL COMMENT '街道',
   `Exif` varchar(20000) DEFAULT NULL COMMENT '从七牛云获得的exif信息',
   `CreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`Md5`,`OrderNumber`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`Md5`,`OrderNumber`),
+  UNIQUE KEY `OrderNumber` (`OrderNumber`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +55,4 @@ CREATE TABLE `photoinfos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-21 15:37:07
+-- Dump completed on 2016-06-21 16:28:06

@@ -423,7 +423,7 @@ var k = 'KDXNwr12XbywmYgVNmuNrBvNDkjE3wuy';
 $(function () {
     setInterval(function() {
         $.get('/home/gettotalcount', null, function(data) {
-            $('.total-count').innerHTML(data);
+            $('.total-count').html(data);
         });
     }, 3000);
 
@@ -600,6 +600,7 @@ function AddContentWithBdAddress(postData) {
             postData.Province = address.result.addressComponent.province;
             postData.City = address.result.addressComponent.city;
             postData.District = address.result.addressComponent.district;
+            postData.Street = address.result.addressComponent.street;
         }
 
         AddContent(postData);
